@@ -33,8 +33,10 @@ def compute_overlap_time(range1, range2):
 # move it to the `test_given_input()` function
 if __name__ == "__main__":
     large = time_range("2010-01-12 10:00:00", "2010-01-12 12:00:00")
+    print(time_range("2010-01-12 10:00:00", "2010-01-12 12:00:00", number_of_intervals=2, gap_between_intervals_s=60))
+    print(time_range("2010-01-12 10:30:00", "2010-01-12 10:45:00", number_of_intervals=2, gap_between_intervals_s=60))
     short = time_range("2010-01-12 10:30:00", "2010-01-12 10:45:00", 2, 60)
-    print(compute_overlap_time(large, short))
+    # print(compute_overlap_time(large, short))
 
 
 # test whether the bug was fixed
