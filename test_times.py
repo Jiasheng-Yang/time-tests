@@ -1,6 +1,9 @@
 import pytest
+import yaml
 from times import time_range, compute_overlap_time
 
+"""
+# Answers UCL-COMP0233-24-25/RSE-Classwork#16
 @pytest.mark.parametrize(
     "range1, range2, expected",
     [
@@ -33,7 +36,8 @@ from times import time_range, compute_overlap_time
 def test_compute_overlap_time(range1, range2, expected):
     result = compute_overlap_time(range1, range2)
     assert result == expected, f"Expected: {expected}, but got: {result}"
-
+"""
+    
 """
 def test_given_input():
     large = time_range("2010-01-12 10:00:00", "2010-01-12 12:00:00", number_of_intervals=1, gap_between_intervals_s=0)
@@ -66,6 +70,37 @@ def test_time_adjacent():
     expected = []
     assert result == expected, f"Expected: {expected}, but got: {result}"
 """
+
+
+def load_fixture_data():
+    with open("fixture.yaml", "r") as file:
+        return yaml.safe_load(file)
+
+fixture_data = load_fixture_data()
+parametrize_data = [
+    (
+        time_range(
+            case[list(case.keys())[0]]["time_range_1"]["start"],
+            case[list(case.keys())[0]]["time_range_1"]["end"],
+            number_of_intervals=case[list(case.keys())[0]]["time_range_1"]["number_of_intervals"],
+            gap_between_intervals_s=case[list(case.keys())[0]]["time_range_1"]["gap_between_intervals_s"]
+        ),
+        time_range(
+            case[list(case.keys())[0]]["time_range_2"]["start"],
+            case[list(case.keys())[0]]["time_range_2"]["end"],
+            number_of_intervals=case[list(case.keys())[0]]["time_range_2"]["number_of_intervals"],
+            gap_between_intervals_s=case[list(case.keys())[0]]["time_range_2"]["gap_between_intervals_s"]
+        ),
+        case[list(case.keys())[0]]["expected"]
+    )
+    for case in fixture_data
+]
+
+@pytest.mark.parametrize("range1, range2, expected", parametrize_data)
+def test_compute_overlap_time(range1, range2, expected):
+    result = [f'("{start}", "{end}")' for start, end in compute_overlap_time(range1, range2)]
+    assert result == expected, f"Expected: {expected}, but got: {result}"
+
 
 def test_wrong_input():
     start_time = "2010-01-12 08:00:00"
