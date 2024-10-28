@@ -31,3 +31,9 @@ def test_time_adjacent():
     result = compute_overlap_time(range1, range2)
     expected = []
     assert result == expected, f"Expected: {expected}, but got: {result}"
+
+def test_wrong_input():
+    start_time = "2010-01-12 08:00:00"
+    end_time = "2010-01-11 08:00:00"
+    with pytest.raises(ValueError, match="Wrong Input!"):
+        time_range(start_time, end_time)
