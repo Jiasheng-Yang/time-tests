@@ -1,4 +1,23 @@
 import datetime
+import requests
+
+
+def iss_passes(observer_lat, observer_lng, observer_alt=0, days=5, min_visibility=50, api_key="your_api_key"):
+    url = f"https://api.n2yo.com/rest/v1/satellite/visualpasses/25544/{observer_lat}/{observer_lng}/{observer_alt}/{days}/{min_visibility}?apiKey={api_key}"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        pass_times = [
+            (
+            datetime.datetime.fromtimestamp(info["startUTC"]).strftime("%Y-%m-%d %H:%M:%S"),
+            datetime.datetime.fromtimestamp(info["endUTC"]).strftime("%Y-%m-%d %H:%M:%S")
+            )
+            for info in data.get("passes", [])
+        ]
+        return pass_times
+    else:
+        raise Exception(f"Resquest failed: {response.status_code}")
 
 
 def time_range(start_time, end_time, number_of_intervals=1, gap_between_intervals_s=0):

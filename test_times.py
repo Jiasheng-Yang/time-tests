@@ -1,6 +1,7 @@
 import pytest
 import yaml
-from times import time_range, compute_overlap_time
+from times import time_range, compute_overlap_time, iss_passes
+from unittest.mock import patch
 
 """
 # Answers UCL-COMP0233-24-25/RSE-Classwork#16
@@ -101,6 +102,23 @@ def test_compute_overlap_time(range1, range2, expected):
     result = [f'("{start}", "{end}")' for start, end in compute_overlap_time(range1, range2)]
     assert result == expected, f"Expected: {expected}, but got: {result}"
 
+def test_iss_passes():
+    mock_response = {
+        "passes": [
+            {"startUTC": 1263292200, "endUTC": 1263292620},  # 2010-01-12 10:30:00 to 2010-01-12 10:37:00
+            {"startUTC": 1263292680, "endUTC": 1263293100}   # 2010-01-12 10:38:00 to 2010-01-12 10:45:00
+        ]
+    }
+    with patch("times.requests.get") as mock_get:
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.json.return_value = mock_response
+
+        result = iss_passes(56, 0, api_key="33Q884-HFUV8K-SCS3LG-55CU")
+        expected = [
+            ("2010-01-12 10:30:00", "2010-01-12 10:37:00"),
+            ("2010-01-12 10:38:00", "2010-01-12 10:45:00")
+        ]
+        assert result == expected, f"Expected: {expected}, but got: {result}"
 
 def test_wrong_input():
     start_time = "2010-01-12 08:00:00"
