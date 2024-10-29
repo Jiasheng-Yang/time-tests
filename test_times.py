@@ -113,7 +113,7 @@ def test_iss_passes():
         mock_get.return_value.status_code = 200
         mock_get.return_value.json.return_value = mock_response
 
-        result = iss_passes(56, 0, api_key="33Q884-HFUV8K-SCS3LG-55CU")
+        result = iss_passes(56, 0, api_key="CTLWQZ-A6E8WG-CBHR67-5D0I")
         expected = [
             ("2010-01-12 10:30:00", "2010-01-12 10:37:00"),
             ("2010-01-12 10:38:00", "2010-01-12 10:45:00")
